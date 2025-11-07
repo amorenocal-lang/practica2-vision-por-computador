@@ -85,17 +85,43 @@
     <h2><span class="sec-icon">🛠️</span>Metodología</h2>
     <h3>Resumen del Pipeline</h3>
     <div class="flowchart-wrapper">
-      <div class="mermaid">
-        flowchart LR
-          A[Imágenes (Sintéticas / Reales)] --> B[Preprocesamiento: escala de grises]
-          B --> C[Detección de Características<br/>SIFT / ORB / AKAZE]
-          C --> D[Emparejamiento<br/>BFMatcher + Ratio Test]
-          D --> E[RANSAC<br/>Estimación Homografía]
-          E --> F[Fusión / Panorama<br/>Warp + Blending]
-          F --> G[Calibración Métrica<br/>Referencia conocida]
-          G --> H[Mediciones<br/>Distancias en cm]
-          H --> I[Incertidumbre<br/>Estadística]
-      </div>
+      <!-- Diagrama Mermaid del pipeline -->
+  <div class="mermaid" aria-label="Diagrama del pipeline de registro">
+%%{init: { 'flowchart': { 'curve': 'linear' } }}%%
+  flowchart LR
+    A[Imagenes] --> B[Preproceso]
+    B --> C[Deteccion SIFT/ORB/AKAZE]
+    C --> D[Matching BF+Ratio]
+    D --> E[RANSAC Homografia]
+    E --> F[Fusion Warp+Blending]
+    F --> G[Calibracion Metrica]
+    G --> H[Mediciones cm]
+    H --> I[Incertidumbre]
+  
+    %% Diagrama de verificacion minimo
+    subgraph Verificacion
+      X[Inicio] --> Y[Fin]
+    end
+  </div>
+  <script>
+    // Log para depuración si falla Mermaid
+    window.addEventListener('load', ()=>{
+      if(window.mermaid){
+        console.log('Mermaid listo, versión:', mermaid.version);
+      } else {
+        console.warn('Mermaid no cargó, mostrando fallback.');
+        document.getElementById('diagram-fallback').style.display='block';
+      }
+    });
+  </script>
+      <noscript>
+        <div class="highlight" style="margin-top:.8rem">El diagrama interactivo requiere JavaScript. Flujo: Imágenes → Preprocesamiento → Detección → Emparejamiento → RANSAC → Fusión → Calibración → Mediciones → Incertidumbre.</div>
+      </noscript>
+      <div id="diagram-fallback" style="display:none" class="highlight small">No se pudo renderizar Mermaid. Fallback textual: Imágenes -> Preprocesamiento -> Detección -> Emparejamiento -> RANSAC -> Fusión -> Calibración -> Mediciones -> Incertidumbre.</div>
+      <script>
+        // Si Mermaid no define mermaidAPI, mostrar fallback
+        window.addEventListener('load', ()=>{try{if(!window.mermaid){document.getElementById('diagram-fallback').style.display='block';}}catch(e){document.getElementById('diagram-fallback').style.display='block';}});
+      </script>
     </div>
     <h3>Descripción Detallada</h3>
     <ol>
