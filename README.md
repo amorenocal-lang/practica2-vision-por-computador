@@ -208,9 +208,13 @@ distancia = calibrador.medir_distancia((x3, y3), (x4, y4))
 
 ---
 
-## 👥 Autor
+## 👥 Autores
 
-**[Tu Nombre]**  
+- Andres Felipe Moreno Calle
+- David Giraldo Valencia
+- Juan Pablo Palacio Perez
+- Victor Manuel Velasquez Cabeza
+
 Universidad Nacional de Colombia  
 Visión por Computador 2025-02
 
