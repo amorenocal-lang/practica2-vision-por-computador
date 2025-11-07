@@ -25,7 +25,8 @@ Este proyecto implementa un pipeline completo de registro de imágenes para fusi
 ## 🗂️ Estructura del Proyecto
 
 ```
-proyecto-registro-imagenes/
+
+practica2VisionPorComputador/
 ├── README.md                    # Este archivo
 ├── requirements.txt             # Dependencias del proyecto
 ├── data/
@@ -59,7 +60,8 @@ proyecto-registro-imagenes/
 
 ```powershell
 # Navegar al directorio del proyecto
-cd proyecto-registro-imagenes
+cd practica2VisionPorComputador
+
 
 # Instalar dependencias
 pip install -r requirements.txt
@@ -262,7 +264,3 @@ Este proyecto es para fines educativos en el curso de Visión por Computador de 
 - Monitor Andrés Mauricio Zapata
 - Recursos del curso de Visión por Computador
 - Comunidad de OpenCV
-
----
-
-**¡Éxito con tu proyecto!** 🚀
