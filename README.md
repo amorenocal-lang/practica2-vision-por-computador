@@ -11,12 +11,14 @@
 Este proyecto implementa un pipeline completo de registro de imágenes para fusionar múltiples perspectivas de una escena (comedor) y realizar mediciones del mundo real usando objetos de referencia conocidos.
 
 ### Objetivos
+
 1. **Validar** el sistema con imágenes sintéticas
 2. **Registrar y fusionar** tres imágenes del comedor tomadas desde diferentes posiciones
 3. **Calibrar** el sistema usando dimensiones conocidas de objetos de referencia
 4. **Medir** elementos de la escena en unidades del mundo real (centímetros)
 
 ### Objetos de Referencia
+
 - **Cuadro de la Virgen de Guadalupe:** Altura = 117 cm
 - **Mesa:** Ancho = 161.1 cm
 
@@ -24,8 +26,7 @@ Este proyecto implementa un pipeline completo de registro de imágenes para fusi
 
 ## 🗂️ Estructura del Proyecto
 
-```
-
+``` bash
 practica2-vision-por-computador/
 ├── README.md                    # Este archivo
 ├── requirements.txt             # Dependencias del proyecto
@@ -53,6 +54,7 @@ practica2-vision-por-computador/
 ## 🚀 Instalación y Configuración
 
 ### 1. Requisitos Previos
+
 - Python 3.8 o superior
 - pip (gestor de paquetes de Python)
 
@@ -62,14 +64,14 @@ practica2-vision-por-computador/
 # Navegar al directorio del proyecto
 cd practica2-vision-por-computador
 
-
 # Instalar dependencias
 pip install -r requirements.txt
 ```
 
-### 3. Copiar Imágenes
+### 3. Verificar Imágenes
 
-Copie las imágenes del comedor a la carpeta `data/original/`:
+verifique que las imágenes del comedor esten en la carpeta `data/original/`:
+
 - `cuadro_virgen_guadalupe.jpg`
 - `IMG02.jpg`
 - `IMG03.jpg`
@@ -86,25 +88,25 @@ Ejecute los notebooks en orden:
 jupyter notebook
 ```
 
-1. **02_synthetic_validation.ipynb** - Validación con imágenes sintéticas (30%)
+1. **01_exploratory_analysis.ipynb**: Análisis exploratorio de imágenes reales
+   -Importa y verifica las imágenes originales del comedor
+   -Visualiza las imágenes y analiza sus propiedades (dimensiones, canales, megapíxeles)
+   -Muestra histogramas RGB y en escala de grises
+   -Identifica objetos de referencia (cuadro y mesa) para calibración y validación
+   -Planifica la estrategia de registro y fusión de imágenes
+
+2. **02_synthetic_validation.ipynb** Validación con imágenes sintéticas:
    - Crea imágenes sintéticas con transformaciones conocidas
    - Valida el pipeline de registro
    - Compara diferentes detectores (ORB, SIFT, AKAZE)
    - Analiza robustez al ruido
 
-2. **03_main_pipeline.ipynb** - Registro de imágenes reales (40%)
+3. **03_main_pipeline.ipynb** Registro de imágenes reales:
    - Carga las tres imágenes del comedor
    - Detecta características con SIFT
    - Empareja características con ratio test
    - Estima homografías con RANSAC
    - Fusiona las imágenes en un panorama
-
-3. **04_calibration_measurement.ipynb** - Calibración y medición (30%)
-   - Calibra usando el cuadro (117 cm)
-   - Valida con la mesa (161.1 cm)
-   - Mide elementos adicionales
-   - Herramienta interactiva de medición
-   - Análisis de incertidumbre
 
 ### Opción 2: Uso Programático
 
@@ -138,17 +140,20 @@ distancia = calibrador.medir_distancia((x3, y3), (x4, y4))
 ## 🔬 Metodología
 
 ### Parte 1: Validación Sintética
+
 - **Objetivo:** Verificar que el pipeline funciona correctamente
 - **Métodos:** Imágenes sintéticas con transformaciones conocidas
 - **Métricas:** RMSE, error angular, error de traslación
 
 ### Parte 2: Registro de Imágenes Reales
+
 - **Detector:** SIFT (2000 características)
 - **Matcher:** Brute Force + Ratio Test (0.75)
 - **Estimación:** RANSAC con `findHomography`
 - **Fusión:** Blending por promedio en zonas de overlap
 
 ### Parte 3: Calibración y Medición
+
 - **Calibración:** Cuadro de la Virgen (altura 117 cm)
 - **Validación:** Mesa (ancho 161.1 cm)
 - **Mediciones:** Ventanas, sillas, plantas, etc.
@@ -159,6 +164,7 @@ distancia = calibrador.medir_distancia((x3, y3), (x4, y4))
 ## 📊 Resultados Esperados
 
 ### Visualizaciones Generadas
+
 - `imagenes_sinteticas.png` - Imágenes sintéticas de validación
 - `comparacion_detectores.png` - Comparación ORB vs SIFT vs AKAZE
 - `robustez_ruido.png` - Análisis de robustez
@@ -170,6 +176,7 @@ distancia = calibrador.medir_distancia((x3, y3), (x4, y4))
 - `incertidumbre.png` - Análisis de incertidumbre
 
 ### Archivos de Datos
+
 - `mediciones.csv` - Mediciones en formato CSV
 - `tabla_mediciones.html` - Tabla de mediciones en HTML
 
@@ -178,19 +185,23 @@ distancia = calibrador.medir_distancia((x3, y3), (x4, y4))
 ## 🛠️ Técnicas Implementadas
 
 ### Detección de Características
+
 - **SIFT:** Scale-Invariant Feature Transform
 - **ORB:** Oriented FAST and Rotated BRIEF
 - **AKAZE:** Accelerated-KAZE
 
 ### Emparejamiento
+
 - Ratio Test de Lowe (umbral 0.75)
 - RANSAC para filtrado de outliers
 
 ### Transformaciones
+
 - Homografías (transformación proyectiva)
 - Matriz 3x3 con 8 grados de libertad
 
 ### Fusión
+
 - Blending por promedio ponderado
 - Recorte automático de bordes negros
 
@@ -225,12 +236,15 @@ Visión por Computador 2025-02
 ## 📝 Notas Importantes
 
 ### ⚠️ Ajuste de Coordenadas
+
 Los notebooks incluyen coordenadas de ejemplo que **DEBEN SER AJUSTADAS** manualmente según las imágenes reales:
+
 - Coordenadas del cuadro (parte superior e inferior)
 - Coordenadas de la mesa (extremos izquierdo y derecho)
 - Coordenadas de elementos adicionales a medir
 
 ### 🎯 Mejores Prácticas
+
 1. Ejecutar los notebooks en orden
 2. Verificar visualmente cada paso
 3. Ajustar parámetros si es necesario (número de características, umbral RANSAC)
@@ -239,15 +253,19 @@ Los notebooks incluyen coordenadas de ejemplo que **DEBEN SER AJUSTADAS** manual
 ### 🐛 Solución de Problemas
 
 **Problema:** No se detectan suficientes características
+
 - **Solución:** Aumentar `max_features` a 3000-5000
 
 **Problema:** Muchos outliers en los matches
+
 - **Solución:** Ajustar `ratio_test` a 0.65-0.70
 
 **Problema:** El panorama tiene costuras visibles
+
 - **Solución:** Implementar blending más sofisticado (Laplacian blending)
 
 **Problema:** Errores de calibración grandes
+
 - **Solución:** Verificar que las coordenadas sean correctas y precisas
 
 ---
