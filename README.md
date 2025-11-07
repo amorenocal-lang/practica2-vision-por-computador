@@ -26,7 +26,7 @@ Este proyecto implementa un pipeline completo de registro de imágenes para fusi
 
 ```
 
-practica2VisionPorComputador/
+practica2-vision-por-computador/
 ├── README.md                    # Este archivo
 ├── requirements.txt             # Dependencias del proyecto
 ├── data/
@@ -60,7 +60,7 @@ practica2VisionPorComputador/
 
 ```powershell
 # Navegar al directorio del proyecto
-cd practica2VisionPorComputador
+cd practica2-vision-por-computador
 
 
 # Instalar dependencias
