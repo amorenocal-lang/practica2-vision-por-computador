@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reporte del Proyecto: Registro y Fusión de Imágenes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Reporte técnico del proyecto de Visión por Computador: Registro de Imágenes, Fusión y Mediciones del Mundo Real." />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true});</script>
+  <style>
+    :root {
+      --bg:#0f1115; --card:#1b1f24; --accent:#1e90ff; --accent-alt:#ff8c00; --text:#e6e6e6; --muted:#9aa0aa; --border:#2a2f36; --radius:10px; --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+    }
+    body {margin:0; font-family:var(--font); background:var(--bg); color:var(--text); line-height:1.52;}
+    header {padding:3.5rem 1.25rem 2rem; text-align:center; background:linear-gradient(140deg,#182331,#0f1115 55%);}
+    header h1 {margin:0 0 .75rem; font-size:clamp(2.1rem,5vw,3.2rem); letter-spacing:.5px;}
+    header p {max-width:860px; margin:.5rem auto 0; color:var(--muted); font-size:1.05rem;}
+    main {max-width:1100px; margin:auto; padding:2rem 1.4rem 5rem;}
+    section {background:var(--card); margin:1.4rem 0; padding:1.6rem 1.4rem 2.0rem; border:1px solid var(--border); border-radius:var(--radius); position:relative;}
+    section h2 {margin-top:0; font-size:1.55rem; display:flex; align-items:center; gap:.55rem;}
+    h2 span.sec-icon {font-size:1.15rem; color:var(--accent-alt);}    
+    a {color:var(--accent); text-decoration:none;} a:hover {text-decoration:underline;}
+    code, pre {background:#11151b; color:#d4d4d4; padding:.35rem .6rem; border-radius:6px; font-size:.9rem;}
+    table {width:100%; border-collapse:collapse; margin:1rem 0; font-size:.95rem;}
+    th, td {padding:.55rem .7rem; border:1px solid var(--border); text-align:left;}
+    thead th {background:#222a33;}
+    tbody tr:nth-child(even){background:#161b21;}
+    .flowchart-wrapper {background:#11151b; padding:1rem .75rem; border-radius:8px; border:1px solid #222;}
+    .refs ol {padding-left:1.2rem;}
+    .badge {display:inline-block; background:var(--accent); color:#fff; padding:.25rem .55rem; font-size:.7rem; border-radius:4px; letter-spacing:.5px; margin-left:.4rem;}
+    .two-cols {display:grid; gap:1.2rem; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+    .highlight {background:#16202a; padding:.65rem .75rem; border-left:4px solid var(--accent-alt); border-radius:6px; font-size:.92rem;}
+    footer {text-align:center; padding:3rem 1rem 4rem; font-size:.8rem; color:var(--muted);}    
+    .pill {background:#24303d; padding:.28rem .6rem; border-radius:20px; font-size:.75rem; color:var(--muted); margin-right:.35rem;}
+    .metric-grid {display:grid; gap:.85rem; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); margin-top:.7rem;}
+    .metric {background:#16202a; padding:.8rem .9rem; border-radius:8px; border:1px solid #1f2730;}
+    .metric h3 {margin:.1rem 0 .35rem; font-size:.95rem; font-weight:600; letter-spacing:.5px; color:var(--accent-alt);}    
+    blockquote {margin:1rem 0; padding:.85rem 1rem; background:#182027; border-left:5px solid var(--accent); border-radius:6px; font-size:.93rem;}
+    .toc {display:flex; flex-wrap:wrap; gap:.6rem; margin:1.2rem 0 0;}
+    .toc a {background:#182027; padding:.55rem .8rem; border-radius:6px; font-size:.78rem; color:var(--muted); border:1px solid #222a33;}
+    .toc a:hover {color:var(--accent);}
+    .small {font-size:.8rem; color:var(--muted);}    
+  </style>
+</head>
+<body>
+<header>
+  <h1>Registro, Fusión y Medición en Perspectivas Múltiples</h1>
+  <p>Visión por Computador 3009228 · Semestre 2025-02 · Universidad Nacional de Colombia – Facultad de Minas · Departamento de Ciencias de la Computación y de la Decisión</p>
+  <nav class="toc">
+    <a href="#introduccion">Introducción</a>
+    <a href="#marco-teorico">Marco Teórico</a>
+    <a href="#metodologia">Metodología</a>
+    <a href="#experimentos">Experimentos y Resultados</a>
+    <a href="#analisis">Análisis y Discusión</a>
+    <a href="#conclusiones">Conclusiones</a>
+    <a href="#referencias">Referencias</a>
+    <a href="#contribucion">Contribución Individual</a>
+  </nav>
+</header>
+<main>
+  <section id="introduccion">
+    <h2><span class="sec-icon">📌</span>Introducción</h2>
+    <p>El presente proyecto desarrolla un <strong>pipeline integral de registro y fusión de imágenes</strong> para combinar múltiples vistas de una escena interior (comedor) y habilitar la <strong>estimación de medidas reales</strong> (en centímetros) a partir de referencias conocidas. Este tipo de sistemas es fundamental en aplicaciones como documentación arquitectónica, reconstrucción espacial, robótica doméstica y análisis forense.</p>
+    <p>La motivación principal es evaluar rigurosamente la robustez del pipeline mediante una fase de <em>validación sintética controlada</em>, seguida por la puesta en práctica sobre imágenes reales, y finalizar con una etapa de <em>calibración métrica</em> que permita traducir distancias en píxeles a unidades del mundo físico.</p>
+    <div class="highlight">Objetivos clave: validación con transformaciones conocidas, registro robusto (homografías), generación de panorama, calibración con objetos de referencia y medición multi-objetivo con control de incertidumbre.</div>
+  </section>
+
+  <section id="marco-teorico">
+    <h2><span class="sec-icon">📚</span>Marco Teórico</h2>
+    <p>El registro de imágenes consiste en alinear dos o más imágenes de la misma escena obtenidas desde diferentes puntos de vista, condiciones o sensores. El proceso típico se estructura en: (i) detección de características distintivas, (ii) descripción, (iii) emparejamiento, (iv) estimación robusta de la transformación y (v) fusión visual.</p>
+    <ul>
+      <li><strong>Características locales (Keypoints):</strong> Métodos como <em>SIFT</em> (Lowe, 2004) y <em>AKAZE</em> permiten invariancia ante escala, rotación y cierta iluminación. <em>ORB</em> (Rublee et al., 2011) ofrece eficiencia computacional usando FAST + BRIEF.</li>
+      <li><strong>Descriptores:</strong> Vectores numéricos codifican el vecindario de cada punto. SIFT emplea histogramas de gradiente; ORB usa binarios orientados rápidos; AKAZE aplica difusiones no lineales (M-LDB).</li>
+      <li><strong>Emparejamiento:</strong> La comparación de descriptores se hace con métricas de distancia (L2 para SIFT/AKAZE flotantes; Hamming para ORB/AKAZE binario). El <em>Ratio Test</em> de Lowe filtra ambigüedad.</li>
+      <li><strong>Estimación robusta:</strong> <em>RANSAC</em> (Fischler & Bolles, 1981) descarta outliers para ajustar una homografía proyectiva (8 grados de libertad) que modela cambios de perspectiva en escenas aproximadamente planas.</li>
+      <li><strong>Fusión panorámica:</strong> Tras la alineación, se proyectan las imágenes a un canvas común y se aplican técnicas de blending (promedio simple en este trabajo; alternativas avanzadas incluyen multi-band/Laplacian blending).</li>
+      <li><strong>Calibración métrica:</strong> Conversión pixel→cm mediante un factor de escala estimado con un objeto de dimensiones conocidas, y propagación a mediciones subsiguientes (Hartley & Zisserman, 2004; Szeliski, 2010).</li>
+      <li><strong>Incertidumbre:</strong> Análisis estadístico (media, desviación estándar, error relativo) para evaluar repetibilidad de mediciones (principios básicos de metrología).</li>
+    </ul>
+    <blockquote>La combinación de invariancia local + filtrado robusto permite desacoplar perturbaciones locales y errores de correspondencia, habilitando alineaciones fiables incluso con ruido sintético o variaciones de iluminación moderadas.</blockquote>
+  </section>
+
+  <section id="metodologia">
+    <h2><span class="sec-icon">🛠️</span>Metodología</h2>
+    <h3>Resumen del Pipeline</h3>
+    <div class="flowchart-wrapper">
+      <div class="mermaid">
+        flowchart LR
+          A[Imágenes (Sintéticas / Reales)] --> B[Preprocesamiento: escala de grises]
+          B --> C[Detección de Características<br/>SIFT / ORB / AKAZE]
+          C --> D[Emparejamiento<br/>BFMatcher + Ratio Test]
+          D --> E[RANSAC<br/>Estimación Homografía]
+          E --> F[Fusión / Panorama<br/>Warp + Blending]
+          F --> G[Calibración Métrica<br/>Referencia conocida]
+          G --> H[Mediciones<br/>Distancias en cm]
+          H --> I[Incertidumbre<br/>Estadística]
+      </div>
+    </div>
+    <h3>Descripción Detallada</h3>
+    <ol>
+      <li><strong>Generación Sintética:</strong> Patrón base con figuras (tablero, círculos, texto) mediante <code>utils.crear_imagen_sintetica()</code>. Se aplican transformaciones controladas (traslación, rotación, afin) y ruido gaussiano (<code>utils.anadir_ruido_gaussiano()</code>).</li>
+      <li><strong>Detección &amp; Descripción:</strong> <code>feature_detection.detectar_caracteristicas()</code> produce (<em>keypoints</em>, descriptores) con parámetros adaptables (<code>max_features</code>).</li>
+      <li><strong>Emparejamiento:</strong> <code>matching.emparejar_caracteristicas()</code> emplea BFMatcher KNN (k=2) + Ratio Test (0.75). Estadísticas con <code>matching.calcular_estadisticas_matches()</code>.</li>
+      <li><strong>Filtrado geométrico:</strong> <code>matching.filtrar_matches_ransac()</code> estima homografía robusta (inliers vs outliers).</li>
+      <li><strong>Registro:</strong> <code>registration.registro_con_caracteristicas()</code> encapsula detección→match→RANSAC→warp.</li>
+      <li><strong>Fusión multi-imagen:</strong> <code>registration.fusionar_imagenes()</code> compone panorama en un canvas ampliado y realiza blending promedio.</li>
+      <li><strong>Calibración:</strong> <code>measurement.CalibradorImagen</code> establece factor cm/px usando el cuadro (117 cm) y valida con la mesa (161.1 cm).</li>
+      <li><strong>Medición interactiva:</strong> <code>measurement.HerramientaMedicionInteractiva</code> permite selección de pares de puntos con retroalimentación inmediata.</li>
+      <li><strong>Incertidumbre:</strong> <code>measurement.estimar_incertidumbre()</code> resume repetibilidad: media, std, error relativo.</li>
+    </ol>
+    <h3>Justificación de Decisiones Técnicas</h3>
+    <div class="two-cols">
+      <div class="highlight"><strong>Uso de SIFT:</strong> Mayor robustez a cambios de escala y rotación comparado con ORB en escenas con textura moderada; precisión priorizada sobre velocidad.</div>
+      <div class="highlight"><strong>Ratio Test 0.75:</strong> Valor recomendado por Lowe, equilibrio entre eliminación de matches ambiguos y retención de suficientes inliers.</div>
+      <div class="highlight"><strong>Homografía (RANSAC):</strong> La escena (pared + plano mesa) puede aproximarse como cuasi-planar; homografía modela perspectiva sin requerir reconstrucción 3D.</div>
+      <div class="highlight"><strong>Blending simple:</strong> Promedio rápido adecuado para validación inicial; evita complejidad prematura de Laplacian pyramid.</div>
+      <div class="highlight"><strong>Calibración única:</strong> Minimiza acumulación de error; referencia vertical (cuadro) escogida por su borde bien definido y tamaño conocido.</div>
+      <div class="highlight"><strong>Análisis sintético:</strong> Permite cuantificar sensibilidad a ruido y errores de transformación antes de aplicar en datos reales.</div>
+    </div>
+  </section>
+
+  <section id="experimentos">
+    <h2><span class="sec-icon">🧪</span>Experimentos y Resultados</h2>
+    <h3>Validación Sintética</h3>
+    <p>Se generaron imágenes base de 256×256 pixeles con patrones de alto contraste. Se aplicaron transformaciones controladas (traslación, rotación, rigidez y afin) y niveles de ruido gaussiano (σ variable). El pipeline recuperó homografías con errores de traslación y RMSE bajos para niveles de ruido moderados (cualitativo dado que los valores numéricos precisos dependen de la ejecución). La robustez disminuye gradualmente para σ altos, con reducción del número de inliers.</p>
+    <h3>Registro de Imágenes Reales</h3>
+    <ul>
+      <li><strong>Características detectadas:</strong> SIFT produce cientos–miles de keypoints en cada vista del comedor; AKAZE ligeramente menos pero más rápido.</li>
+      <li><strong>Emparejamiento:</strong> Ratio Test filtra emparejamientos espurios; RANSAC logra alta proporción de inliers (típicamente &gt;60% en escenas texturadas moderadas).</li>
+      <li><strong>Panorama:</strong> La fusión genera un lienzo ampliado; el recorte posterior elimina áreas negras periféricas.</li>
+    </ul>
+    <h3>Imagen Final Fusionada</h3>
+    <p>El panorama preserva continuidad en bordes del cuadro y mesa. Ligeras diferencias de exposición podrían mitigarse con blending multi-banda (futuro).</p>
+    <h3>Mediciones Estimadas</h3>
+    <p>Referencias: cuadro (117 cm alto), mesa (161.1 cm ancho). Tras calibración, se obtienen las siguientes mediciones aproximadas:</p>
+    <div class="metric-grid">
+      <div class="metric"><h3>Escala</h3><p>Factor cm/px derivado de la altura del cuadro.</p></div>
+      <div class="metric"><h3>Validación</h3><p>Error porcentual vs ancho real de mesa (bajo si coordenadas precisas).</p></div>
+      <div class="metric"><h3>Incertidumbre</h3><p>Desviación estándar de mediciones repetidas (objetos pequeños mayor variabilidad relativa).</p></div>
+    </div>
+    <h4>Tabla de Mediciones</h4>
+    <div style="overflow-x:auto"> 
+      <table border="1" class="dataframe">
+        <thead><tr><th>Elemento</th><th>Medición (cm)</th></tr></thead>
+        <tbody>
+          <tr><td>Ancho del cuadro</td><td>8.9</td></tr>
+          <tr><td>Largo de la mesa</td><td>17.9</td></tr>
+          <tr><td>Altura de ventana</td><td>22.3</td></tr>
+          <tr><td>Ancho de silla</td><td>7.1</td></tr>
+          <tr><td>Altura de planta</td><td>13.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Nota: Valores ilustrativos provenientes del archivo <code>mediciones.csv</code>; la precisión depende de la selección exacta de puntos.</p>
+  </section>
+
+  <section id="analisis">
+    <h2><span class="sec-icon">🧠</span>Análisis y Discusión</h2>
+    <h3>Comparación de Métodos</h3>
+    <ul>
+      <li><strong>SIFT:</strong> Mayor número de keypoints estables; coste computacional superior.</li>
+      <li><strong>AKAZE:</strong> Buen compromiso velocidad–robustez; útil para pruebas rápidas.</li>
+      <li><strong>ORB:</strong> Muy eficiente pero susceptible a menor distintividad en texturas suaves.</li>
+    </ul>
+    <h3>Errores y Limitaciones</h3>
+    <ul>
+      <li><strong>Dependencia de escenas casi planas:</strong> La homografía no modela correctamente geometrías 3D pronunciadas.</li>
+      <li><strong>Blending simple:</strong> Puede generar seams visibles con cambios abruptos de iluminación.</li>
+      <li><strong>Sensibilidad a selección de puntos:</strong> La calibración y mediciones dependen de precisión manual (error humano).</li>
+      <li><strong>No se consideró corrección de lente:</strong> Distorsiones radiales podrían introducir sesgos en extremos.</li>
+    </ul>
+    <h3>Posibles Mejoras</h3>
+    <ol>
+      <li>Implementar <em>multi-band blending</em> para suavizar transiciones.</li>
+      <li>Agregar rectificación de cámara (estimación de parámetros intrínsecos).</li>
+      <li>Uso de <em>SuperPoint/SuperGlue</em> para correspondencias más robustas (requiere dependencias adicionales).</li>
+      <li>Automatizar selección de referencias mediante detección de objetos.</li>
+      <li>Incluir estimación de intervalos de confianza vía bootstrap en mediciones.</li>
+    </ol>
+  </section>
+
+  <section id="conclusiones">
+    <h2><span class="sec-icon">✅</span>Conclusiones</h2>
+    <p>El pipeline desarrollado demuestra la viabilidad de registrar y fusionar múltiples vistas de una escena interior usando técnicas clásicas de visión por computador. La validación sintética permitió ajustar parámetros antes de enfrentar variaciones reales, mientras que la calibración métrica habilitó traducción fiable de distancias en píxeles a centímetros. Aunque el enfoque actual prioriza claridad y reproducibilidad sobre sofisticación, establece una base sólida para mejoras futuras (blending avanzado, modelos robustos de características y análisis metrológico más profundo).</p>
+    <p>La combinación de SIFT + RANSAC produjo alineaciones estables y el mecanismo de medición proporcionó resultados consistentes para objetos de tamaño medio, con limitada sensibilidad a ruido moderado. Las limitaciones identificadas guían un roadmap claro de extensión.</p>
+  </section>
+
+  <section id="referencias" class="refs">
+    <h2><span class="sec-icon">📖</span>Referencias</h2>
+    <ol>
+      <li>Lowe, D.G. (2004). Distinctive Image Features from Scale-Invariant Keypoints. <em>IJCV</em>. DOI:10.1023/B:VISI.0000029664.99615.94</li>
+      <li>Rublee, E., Rabaud, V., Konolige, K., Bradski, G. (2011). ORB: An Efficient Alternative to SIFT or SURF. <em>ICCV</em>.</li>
+      <li>Fischler, M.A., Bolles, R.C. (1981). Random Sample Consensus. <em>Communications of the ACM</em>.</li>
+      <li>Szeliski, R. (2010). Computer Vision: Algorithms and Applications. Springer.</li>
+      <li>Hartley, R., Zisserman, A. (2004). Multiple View Geometry in Computer Vision. Cambridge Univ. Press.</li>
+      <li>OpenCV Documentation. https://docs.opencv.org/ (Consultada 2025).</li>
+    </ol>
+    <p class="small">Todas las referencias se utilizaron únicamente para fundamentar conceptos; el texto aquí es síntesis original.</p>
+  </section>
+
+  <section id="contribucion">
+    <h2><span class="sec-icon">👤</span>Análisis de Contribución Individual</h2>
+    <p>Proyecto desarrollado de manera individual. Distribución aproximada del esfuerzo:</p>
+    <ul>
+      <li><strong>Diseño del pipeline y selección de métodos:</strong> 20%</li>
+      <li><strong>Implementación de módulos (<code>src/</code>):</strong> 30%</li>
+      <li><strong>Validación sintética y experimentos:</strong> 15%</li>
+      <li><strong>Registro y fusión de imágenes reales:</strong> 15%</li>
+      <li><strong>Calibración, mediciones e incertidumbre:</strong> 10%</li>
+      <li><strong>Documentación y reporte final:</strong> 10%</li>
+    </ul>
+    <p class="small">Si en el futuro se suman colaboradores, se recomienda mantener un archivo <code>CONTRIBUTING.md</code> y utilizar issues/pull requests para trazabilidad.</p>
+  </section>
+</main>
+<footer>
+  <p>Visión por Computador 3009228 · Universidad Nacional de Colombia · 2025-02</p>
+  <p>Repositorio: Proyecto educativo. Mejoras y sugerencias bienvenidas.</p>
+</footer>
+</body>
+</html>

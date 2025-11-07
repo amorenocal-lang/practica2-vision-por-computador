@@ -1,0 +1,28 @@
+# Dependencias del Proyecto - Registro de Imágenes
+# Universidad Nacional de Colombia
+# Visión por Computador 2025-02
+
+# Procesamiento de imágenes y visión por computador
+opencv-python>=4.8.0
+opencv-contrib-python>=4.8.0
+
+# Computación numérica
+numpy>=1.24.0
+
+# Visualización
+matplotlib>=3.7.0
+
+# Análisis de datos
+pandas>=2.0.0
+
+# Notebooks Jupyter
+jupyter>=1.0.0
+notebook>=7.0.0
+ipykernel>=6.25.0
+
+# Procesamiento científico (opcional pero recomendado)
+scipy>=1.11.0
+scikit-image>=0.21.0
+
+# Utilidades
+tqdm>=4.66.0
